@@ -9,7 +9,7 @@ import Footer from "@/components/landing/Footer";
 
 export default function Home() {
   return (
-    <div className="bg-[#ffe17c] min-h-screen font-sans selection:bg-black selection:text-white">
+    <div className="bg-[#ffe17c] text-black min-h-screen font-sans selection:bg-black selection:text-white">
       <Navigation />
       <Hero />
       <Marquee />

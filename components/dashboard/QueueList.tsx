@@ -50,7 +50,7 @@ export default function QueueList({ queue, onClear }: { queue: QueueItem[]; onCl
               <p className="text-sm font-medium opacity-70 mb-2">{formatBytes(item.file.size)}</p>
               {item.cloudinaryUrl ? (
                 <div className="flex items-center gap-2">
-                  <input type="text" readOnly value={item.cloudinaryUrl} className="flex-1 border-2 border-black p-2 text-sm bg-gray-50 focus:outline-none" />
+                  <input type="text" readOnly value={item.cloudinaryUrl} className="flex-1 border-2 border-black p-2 text-sm bg-gray-50 text-black focus:outline-none" />
                   <button onClick={() => copyToClipboard(item.cloudinaryUrl as string, item.id)} className="btn-neo text-sm py-2 px-4">
                     {copiedItemId === item.id ? "OK" : "CPY"}
                   </button>

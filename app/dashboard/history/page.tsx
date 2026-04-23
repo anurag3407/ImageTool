@@ -95,7 +95,7 @@ export default function HistoryPage() {
                     type="text" 
                     readOnly 
                     value={item.cloudinaryUrl} 
-                    className="flex-1 border-2 border-black p-2 text-xs bg-gray-50 focus:outline-none truncate" 
+                    className="flex-1 border-2 border-black p-2 text-xs bg-gray-50 text-black focus:outline-none truncate" 
                   />
                   <button 
                     onClick={() => copyToClipboard(item.cloudinaryUrl, item.id)} 

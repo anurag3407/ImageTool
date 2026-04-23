@@ -36,7 +36,7 @@ export default function AuthPanel({ onLogin }: { onLogin: (u: string, p: string,
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full border-2 border-black p-3 rounded-none bg-white focus:outline-none focus:ring-0 font-sans shadow-neo"
+            className="w-full border-2 border-black p-3 rounded-none bg-white text-black focus:outline-none focus:ring-0 font-sans shadow-neo"
             placeholder="USER_ID"
           />
         </div>
@@ -46,7 +46,7 @@ export default function AuthPanel({ onLogin }: { onLogin: (u: string, p: string,
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border-2 border-black p-3 rounded-none bg-white focus:outline-none focus:ring-0 font-sans shadow-neo"
+            className="w-full border-2 border-black p-3 rounded-none bg-white text-black focus:outline-none focus:ring-0 font-sans shadow-neo"
             placeholder="••••••••"
           />
         </div>
