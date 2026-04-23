@@ -1,143 +1,77 @@
-# Background Removal Console and cloudinary helper (Next.js)
+# ImageTool — Neo-Brutalist Background Removal SaaS
 
-A Technical Minimalist web app that:
+ImageTool is a high-performance, minimalist web application built with Next.js that allows users to rapidly remove backgrounds from images entirely in the browser using WASM, and seamlessly upload them directly to Cloudinary. It features a striking, high-contrast Neo-Brutalist design system.
 
-1. Accepts multiple image files.
-2. Lets you choose per upload mode: with background removal or direct upload.
-3. Processes items one-by-one (strict sequential queue).
-4. Uploads to Cloudinary and streams each secure URL as soon as that item finishes.
-5. Saves URL history in MongoDB (URL metadata only, no image binaries).
-6. Protects upload and history APIs with JWT.
+![ImageTool Dashboard Architecture](https://img.shields.io/badge/Next.js-16.2.4-black?style=for-the-badge&logo=next.js)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-Integration-blue?style=for-the-badge&logo=cloudinary)
+![MongoDB](https://img.shields.io/badge/MongoDB-Persistence-green?style=for-the-badge&logo=mongodb)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css)
 
-## Stack
+## ✨ Core Features
 
-- Next.js App Router + TypeScript
-- `@imgly/background-removal` for free in-browser background removal
-- Cloudinary server-side upload route
-- MongoDB (Mongoose) for persistence
-- JWT auth (login + bearer token verification)
+- **In-Browser AI Inference**: Utilizes `@imgly/background-removal` to process images directly in the user's browser, eliminating expensive backend GPU costs.
+- **Direct-to-Cloudinary Signed Uploads**: Images are sent directly from the browser to Cloudinary using secure, server-generated cryptographic signatures. This completely bypasses Vercel's strict 4.5MB free-tier serverless payload limits.
+- **Neo-Brutalist Aesthetic**: Built from the ground up with a strict high-contrast color palette, hard un-blurred shadows, and playful mechanical push-button micro-interactions.
+- **Modular Dashboard Architecture**: Clean separation of marketing landing pages and the functional workspace.
+- **Secure Authentication**: Multi-user JWT-based authentication system backed by MongoDB.
+- **Persistent Link History**: Every processed image is saved to a beautiful, responsive grid layout for easy access and clipboard copying.
 
-## Install
+## 🛠 Tech Stack
 
+- **Framework**: Next.js (App Router) + TypeScript
+- **Styling**: Tailwind CSS v4 (Neo-Brutalist Design System)
+- **AI Model**: `isnet_quint8` via `@imgly/background-removal`
+- **Storage**: Cloudinary (Signed Direct Uploads)
+- **Database**: MongoDB (Mongoose)
+- **Authentication**: Custom JWT implementation
+
+## 🚀 Quick Start
+
+### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-## Environment
-
-1. Copy `.env.example` to `.env.local`.
-2. Add your Cloudinary values:
-
+### 2. Configure Environment
+Copy `.env.example` to `.env.local` and add your secrets.
 ```env
+# Cloudinary Configuration
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-MONGODB_URI=mongodb+srv://username:password@cluster0.example.mongodb.net/?retryWrites=true&w=majority
+
+# Database
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority
 MONGODB_DB_NAME=image_tool
-JWT_SECRET=replace_with_a_long_random_secret
-AUTH_USERNAME=replace_with_login_username
-AUTH_PASSWORD=replace_with_login_password
+
+# Security
+JWT_SECRET=generate_a_long_random_string
 ```
 
-Use `.env.local` for real secrets. Keep `.env.example` as placeholders only.
-
-## Run
-
+### 3. Run the Development Server
 ```bash
 npm run dev
 ```
+Open `http://localhost:3000` to see the landing page, and navigate to `/dashboard` to use the tool.
 
-Open `http://localhost:3000`.
+## 🏗 Architecture Details
 
-## Queue behavior
+### The Upload Pipeline
+1. **Drop & Validate**: User drops an image (up to 12MB). File is validated for type and size.
+2. **AI Processing**: If "Remove Background" is selected, the image is passed to the local WASM model.
+3. **Signature Generation**: The client requests a secure upload signature from `/api/cloudinary-sign` via the JWT token.
+4. **Direct Upload**: The processed Blob is uploaded directly to Cloudinary using the cryptographic signature.
+5. **Persistence**: The resulting secure URL is saved to MongoDB via `/api/upload-record`.
 
-1. Files are added in selected order.
-2. Valid files move through:
- - `pending`
- - `removing_background`
- - `uploading_cloudinary`
- - `done` or `failed`
-3. Each queue item stores the selected mode (`with_bg_removal` / `without_bg_removal`).
-4. Failures do not stop the queue.
-5. Failed items can be retried individually.
-6. Completed items expose:
- - open link
- - copy link
- - copy all successful URLs
+### UI/UX Design System
+The UI explicitly prevents OS-level Dark/Light mode overrides to maintain the strict yellow (`#ffe17c`), sage (`#b7c6c2`), and charcoal (`#171e19`) color palette. Component interactions rely on sharp `translate-x` and `translate-y` CSS transforms over smooth blurs.
 
-## Size and format rules
+## 🐛 Troubleshooting
 
-- Accepted types: PNG, JPEG, WEBP
-- Max file size: 12MB per item
-- Large files (over 4MB) are optionally resized client-side first to improve speed
-
-Tradeoff: resizing speeds up local inference and upload, but may reduce detail in edge quality.
-
-## Cloudinary upload details
-
-- API route: `app/api/upload-processed/route.ts`
-- Upload folder: `bg-removed-images` (with bg removal) or `original-images` (without bg removal)
-- Secure URLs returned per item
-- Cloudinary secrets remain server-side only
-
-## MongoDB persistence details
-
-- Mongo connection helper: `lib/mongodb.ts`
-- Mongoose model: `models/processed-upload.ts`
-- Every successful Cloudinary upload is saved with URL-only metadata:
- 	- owner user (from JWT)
- 	- file name
- 	- Cloudinary URL + public id
- 	- processing mode
- 	- client queue item id
- 	- timestamps
-- History endpoint: `app/api/upload-history/route.ts` (latest 50 records per authenticated user)
-
-## JWT auth details
-
-- Login endpoint: `app/api/auth/login/route.ts`
-- Client gets token via username/password and sends `Authorization: Bearer <token>`
-- Protected endpoints:
- 	- `POST /api/upload-processed`
- 	- `GET /api/upload-history`
-
-## Manual test checklist
-
-1. Select 3-5 valid images and confirm items process one-by-one.
-2. Test both modes:
- - with background removal
- - without background removal
-3. Confirm each row receives a secure URL as it completes.
-4. Confirm completed rows include a MongoDB record reference in detail text.
-5. Confirm URL history panel previews images from stored URLs.
-6. Call `/api/upload-history` with a bearer token and verify records are user-scoped.
-7. Upload one invalid file type and confirm row fails with validation message.
-8. Retry a failed row and confirm it can finish independently.
-9. Click `Copy URL` and `Copy All URLs` and verify clipboard output.
-
-## Troubleshooting
-
-1. `Cloudinary credentials are missing`
- - Verify `.env.local` contains all three Cloudinary keys.
- - Restart the dev server after editing env vars.
-
-2. `MONGODB_URI is missing`
- - Add `MONGODB_URI` in `.env.local`.
- - Optional: add `MONGODB_DB_NAME`.
- - Restart the dev server.
-
-3. `Unauthorized. Provide a valid Bearer token.`
- - Login from the app UI first (JWT section).
- - Verify `JWT_SECRET`, `AUTH_USERNAME`, and `AUTH_PASSWORD` are set.
-
-4. Background model fails to load
- - Check browser network access to IMG.LY model assets.
- - If your environment blocks this, switch to a local rembg microservice fallback.
-
-5. Slow first image
- - Expected. First run downloads and caches model files.
-
-6. Next.js compatibility edge cases
- - `@imgly/background-removal` officially documents Next.js 15 support.
- - This app includes a user-facing fallback note for local rembg service when needed.
+| Error | Solution |
+| :--- | :--- |
+| `Upload preset must be whitelisted` | Ensure `CLOUDINARY_API_SECRET` is set correctly. The app uses Signed Uploads, which require the secret to generate a valid hash. |
+| `Hydration failed because the server rendered HTML didn't match` | Ensure you aren't removing the `isMounted` checks in the Dashboard components. |
+| `Unauthorized. Provide a valid Bearer token` | Your JWT has expired or the `JWT_SECRET` changed. Clear your `localStorage` and log in again. |
+| Background model fails to load | First load takes longer to cache the model. If it repeatedly fails, ensure your network isn't blocking `.wasm` binaries. |
