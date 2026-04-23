@@ -1,46 +1,24 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&f[]=cabinet-grotesk@400,500,800,900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", var(--font-space-grotesk), sans-serif;
-  --font-mono: var(--font-jetbrains-mono), monospace;
+  --font-sans: "Satoshi", sans-serif;
+  --font-heading: "Cabinet Grotesk", sans-serif;
   
-  --color-background: #09090b;
-  --color-foreground: #fafafa;
-  --color-primary: #8b5cf6;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #27272a;
-  --color-secondary-foreground: #fafafa;
-  --color-muted: #18181b;
-  --color-muted-foreground: #a1a1aa;
-  --color-accent: #3b82f6;
-  --color-accent-foreground: #ffffff;
-  --color-destructive: #ef4444;
-  --color-border: #27272a;
-  --color-input: #27272a;
-  --color-ring: #8b5cf6;
+  --color-neo-yellow: #ffe17c;
+  --color-neo-charcoal: #171e19;
+  --color-neo-sage: #b7c6c2;
+  --color-neo-white: #ffffff;
+  --color-neo-black: #000000;
+  --color-neo-gray: #272727;
+  --color-neo-red: #ff5f57;
+  --color-neo-green: #28c840;
+  --color-neo-yellow-dark: #febc2e;
 }
 
 :root {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #09090b;
-  --card-foreground: #fafafa;
-  --popover: #09090b;
-  --popover-foreground: #fafafa;
-  --primary: #8b5cf6;
-  --primary-foreground: #ffffff;
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
-  --muted: #18181b;
-  --muted-foreground: #a1a1aa;
-  --accent: #3b82f6;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #fafafa;
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #8b5cf6;
-  --radius: 0.75rem;
+  --background: #171e19;
+  --foreground: #ffffff;
 }
 
 * {
@@ -57,106 +35,120 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-image: 
-    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-    radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%), 
-    radial-gradient(at 100% 0%, hsla(339,49%,30%,0.1) 0, transparent 50%);
-  background-attachment: fixed;
+  font-size: 1rem;
 }
 
-/* Glassmorphism utilities */
-.glass-panel {
-  background: rgba(24, 24, 27, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.05em;
 }
 
-.glass-card {
-  background: rgba(39, 39, 42, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius);
-  transition: all 0.2s ease-in-out;
+/* Neo-Brutalist Shadow Utilities */
+.shadow-neo {
+  box-shadow: 4px 4px 0px 0px #000000;
 }
 
-.glass-card:hover {
-  background: rgba(39, 39, 42, 0.5);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+.shadow-neo-lg {
+  box-shadow: 8px 8px 0px 0px #000000;
 }
 
-.glass-button {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(59, 130, 246, 0.8));
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-  color: white;
-  transition: all 0.2s ease;
+.shadow-neo-white {
+  box-shadow: 4px 4px 0px 0px #ffffff;
 }
 
-.glass-button:hover {
-  box-shadow: 0 0 25px rgba(139, 92, 246, 0.5);
-  transform: translateY(-1px);
+/* Push Button Effects */
+.btn-neo {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #000000;
+  border-radius: 0.5rem; /* Max 12px / 0.75rem requested, sticking to 0.5rem */
+  box-shadow: 8px 8px 0px 0px #000000;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
 }
 
-.glass-button:active {
-  transform: translateY(1px);
+.btn-neo:hover {
+  transform: translate(4px, 4px);
+  box-shadow: 4px 4px 0px 0px #000000;
 }
 
-.glass-input {
-  background: rgba(24, 24, 27, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--foreground);
-  transition: all 0.2s ease;
+.btn-neo:active {
+  transform: translate(8px, 8px);
+  box-shadow: 0px 0px 0px 0px #000000;
 }
 
-.glass-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+.btn-neo-white {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+  box-shadow: 4px 4px 0px 0px #000000;
 }
 
-/* Animations */
-@keyframes pulse-glow {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
+.btn-neo-white:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #000000;
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.btn-neo-white:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #000000;
 }
 
-@keyframes slide-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.btn-neo-sage {
+  background-color: #b7c6c2;
+  color: #000000;
+  border: 2px solid #000000;
+  box-shadow: 4px 4px 0px 0px #000000;
 }
 
-.animate-slide-up {
-  animation: slide-up 0.5s ease-out forwards;
+.btn-neo-sage:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #000000;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.btn-neo-sage:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #000000;
 }
 
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out forwards;
+.btn-neo:disabled, .btn-neo-white:disabled, .btn-neo-sage:disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+/* Background Patterns */
+.bg-neo-dots {
+  background-image: radial-gradient(rgba(0,0,0,0.1) 2px, transparent 2px);
+  background-size: 32px 32px;
+}
+
+/* Stroke effect for hero */
+.text-stroke-neo {
+  -webkit-text-stroke: 2px #000000;
+  color: transparent;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: 200%;
+  animation: marquee 20s linear infinite;
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: 200%;
+  animation: marquee 40s linear infinite;
 }
