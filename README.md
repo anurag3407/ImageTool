@@ -1,4 +1,4 @@
-# Background Removal Console (Next.js)
+# Background Removal Console and cloudinary helper (Next.js)
 
 A Technical Minimalist web app that:
 
@@ -54,17 +54,17 @@ Open `http://localhost:3000`.
 
 1. Files are added in selected order.
 2. Valid files move through:
-	- `pending`
-	- `removing_background`
-	- `uploading_cloudinary`
-	- `done` or `failed`
+ - `pending`
+ - `removing_background`
+ - `uploading_cloudinary`
+ - `done` or `failed`
 3. Each queue item stores the selected mode (`with_bg_removal` / `without_bg_removal`).
-3. Failures do not stop the queue.
-4. Failed items can be retried individually.
-5. Completed items expose:
-	- open link
-	- copy link
-	- copy all successful URLs
+4. Failures do not stop the queue.
+5. Failed items can be retried individually.
+6. Completed items expose:
+ - open link
+ - copy link
+ - copy all successful URLs
 
 ## Size and format rules
 
@@ -86,12 +86,12 @@ Tradeoff: resizing speeds up local inference and upload, but may reduce detail i
 - Mongo connection helper: `lib/mongodb.ts`
 - Mongoose model: `models/processed-upload.ts`
 - Every successful Cloudinary upload is saved with URL-only metadata:
-	- owner user (from JWT)
-	- file name
-	- Cloudinary URL + public id
-	- processing mode
-	- client queue item id
-	- timestamps
+ 	- owner user (from JWT)
+ 	- file name
+ 	- Cloudinary URL + public id
+ 	- processing mode
+ 	- client queue item id
+ 	- timestamps
 - History endpoint: `app/api/upload-history/route.ts` (latest 50 records per authenticated user)
 
 ## JWT auth details
@@ -99,15 +99,15 @@ Tradeoff: resizing speeds up local inference and upload, but may reduce detail i
 - Login endpoint: `app/api/auth/login/route.ts`
 - Client gets token via username/password and sends `Authorization: Bearer <token>`
 - Protected endpoints:
-	- `POST /api/upload-processed`
-	- `GET /api/upload-history`
+ 	- `POST /api/upload-processed`
+ 	- `GET /api/upload-history`
 
 ## Manual test checklist
 
 1. Select 3-5 valid images and confirm items process one-by-one.
 2. Test both modes:
-	- with background removal
-	- without background removal
+ - with background removal
+ - without background removal
 3. Confirm each row receives a secure URL as it completes.
 4. Confirm completed rows include a MongoDB record reference in detail text.
 5. Confirm URL history panel previews images from stored URLs.
@@ -119,25 +119,25 @@ Tradeoff: resizing speeds up local inference and upload, but may reduce detail i
 ## Troubleshooting
 
 1. `Cloudinary credentials are missing`
-	- Verify `.env.local` contains all three Cloudinary keys.
-	- Restart the dev server after editing env vars.
+ - Verify `.env.local` contains all three Cloudinary keys.
+ - Restart the dev server after editing env vars.
 
 2. `MONGODB_URI is missing`
-	- Add `MONGODB_URI` in `.env.local`.
-	- Optional: add `MONGODB_DB_NAME`.
-	- Restart the dev server.
+ - Add `MONGODB_URI` in `.env.local`.
+ - Optional: add `MONGODB_DB_NAME`.
+ - Restart the dev server.
 
 3. `Unauthorized. Provide a valid Bearer token.`
-	- Login from the app UI first (JWT section).
-	- Verify `JWT_SECRET`, `AUTH_USERNAME`, and `AUTH_PASSWORD` are set.
+ - Login from the app UI first (JWT section).
+ - Verify `JWT_SECRET`, `AUTH_USERNAME`, and `AUTH_PASSWORD` are set.
 
 4. Background model fails to load
-	- Check browser network access to IMG.LY model assets.
-	- If your environment blocks this, switch to a local rembg microservice fallback.
+ - Check browser network access to IMG.LY model assets.
+ - If your environment blocks this, switch to a local rembg microservice fallback.
 
 5. Slow first image
-	- Expected. First run downloads and caches model files.
+ - Expected. First run downloads and caches model files.
 
 6. Next.js compatibility edge cases
-	- `@imgly/background-removal` officially documents Next.js 15 support.
-	- This app includes a user-facing fallback note for local rembg service when needed.
+ - `@imgly/background-removal` officially documents Next.js 15 support.
+ - This app includes a user-facing fallback note for local rembg service when needed.
